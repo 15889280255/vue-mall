@@ -6,8 +6,8 @@
     <home-swiper :banners="banner" />
     <home-recommend :recommends="recommend" />
     <future-view />
-    <tab-control :titles="['流行','精选','新款']" class="tab-control"/>
-    <goods-list :goods="goods['pop'].list"/>
+    <tab-control :titles="['流行','精选','新款']" class="tab-control" @tabIndedx="tabIndedx" />
+    <goods-list :goods="pushGoods" />
   </div>
 </template>
 
@@ -32,6 +32,12 @@ export default {
     TabControl,
     GoodsList
   },
+  created() {
+    this.getHomeMultidata();
+    this.getHomeData("pop", 0);
+    this.getHomeData("new", 0);
+    this.getHomeData("sell", 0);
+  },
   data() {
     return {
       banner: [],
@@ -40,16 +46,31 @@ export default {
         pop: { page: 0, list: [] },
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
-      }
+      },
+      currentTab: "pop"
     };
   },
-  created() {
-    this.getHomeMultidata();
-    this.getHomeData("pop", 0);
-    this.getHomeData("new", 0);
-    this.getHomeData("sell", 0);
-  },
   methods: {
+    /**
+     * 事件处理
+     */
+    tabIndedx(index) {
+      switch (index) {
+        case 0:
+          this.currentTab = "pop";
+          break;
+        case 1:
+          this.currentTab = "new";
+          break;
+        case 2:
+          this.currentTab = "sell";
+          break;
+      }
+    },
+
+    /**
+     * 网络请求
+     */
     getHomeMultidata() {
       getHomeMultidata().then(val => {
         this.banner = val.data.banner.list;
@@ -59,9 +80,14 @@ export default {
     getHomeData(type) {
       const page = this.goods[type].page + 1;
       getHomeData(type, page).then(val => {
-        this.goods[type].list.push(...val.data.list)
-        this.goods[type].page +=1;
+        this.goods[type].list.push(...val.data.list);
+        this.goods[type].page += 1;
       });
+    }
+  },
+  computed: {
+    pushGoods() {
+      return this.goods[this.currentTab].list;
     }
   }
 };
@@ -76,7 +102,7 @@ export default {
   z-index: 100;
 }
 
-.tab-control{
+.tab-control {
   position: sticky;
   top: 49px;
   z-index: 10;

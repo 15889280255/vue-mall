@@ -27,9 +27,10 @@ export default {
       }
     }
   },
-  methods:{
-    itemClick(index){
-      this.currentIndex =index;
+  methods: {
+    itemClick(index) {
+      this.currentIndex = index;
+      this.$emit('tabIndedx',index)
     }
   }
 };
@@ -49,15 +50,15 @@ export default {
   height: 40px;
 }
 
-.tab-control-item span{
+.tab-control-item span {
   padding-bottom: 5px;
 }
 
-.active{
+.active {
   color: var(--color-high-text);
 }
 
-.active span{
-  border-bottom:2px solid var(--color-tint);
+.active span {
+  border-bottom: 2px solid var(--color-tint);
 }
 </style>
