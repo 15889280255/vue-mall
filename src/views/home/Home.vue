@@ -3,7 +3,7 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="scroll" ref="scroll">
+    <scroll class="scroll" ref="scroll" :probeType="3" @getPosition="getPosition">
       <home-swiper :banners="banner" />
       <home-recommend :recommends="recommend" />
       <future-view />
@@ -11,12 +11,11 @@
       <goods-list :goods="pushGoods" />
     </scroll>
 
-    <back-top @click.native="backClick"/>
+    <back-top @click.native="backClick" v-show="showBackTop"/>
   </div>
 </template>
 
 <script>
-
 import HomeSwiper from "./childComps/HomeSwiper";
 import HomeRecommend from "./childComps/HomeRecommend";
 import FutureView from "./childComps/FutureView";
@@ -25,7 +24,7 @@ import GoodsList from "content/goods/GoodsList";
 import NavBar from "components/common/navbar/NavBar.vue";
 import TabControl from "content/tabControl/TabControl";
 import Scroll from "common/scroll/Scroll";
-import BackTop from "content/backtop/BackTop"
+import BackTop from "content/backtop/BackTop";
 
 import { getHomeMultidata, getHomeData } from "network/home";
 
@@ -56,7 +55,8 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] }
       },
-      currentTab: "pop"
+      currentTab: "pop",
+      showBackTop: false
     };
   },
   methods: {
@@ -76,8 +76,12 @@ export default {
           break;
       }
     },
-    backClick(){
-      this.$refs.scroll.scrollTo(0,0,1000)
+    backClick() {
+      this.$refs.scroll.scrollTo(0, 0, 1000);
+    },
+    getPosition(position) {
+      console.log(position.y);
+      this.showBackTop = position.y<-700
     },
 
     /**

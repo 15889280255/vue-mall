@@ -16,9 +16,21 @@ export default {
       scroll:null
     }
   },
+  props:{
+    probeType:{
+      type:Number,
+      default:0
+    }
+  },
   mounted(){
+    // 1.创建BScroll对象
     this.scroll = new BScroll(this.$refs.wrapper,{
-      click:true
+      click:true,
+      probeType:this.probeType
+    }),
+    // 2.添加监听
+    this.scroll.on('scroll',(position)=>{
+      this.$emit('getPosition',position)
     })
   },
   methods:{
