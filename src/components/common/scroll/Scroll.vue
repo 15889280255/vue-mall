@@ -20,10 +20,15 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper,{
       click:true
     })
+  },
+  methods:{
+    scrollTo(x,y,time = 1000){
+      this.scroll.scrollTo(x,y,time)
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

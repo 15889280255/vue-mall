@@ -3,25 +3,29 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="scroll">
+    <scroll class="scroll" ref="scroll">
       <home-swiper :banners="banner" />
       <home-recommend :recommends="recommend" />
       <future-view />
       <tab-control :titles="['流行','精选','新款']" class="tab-control" @tabIndedx="tabIndedx" />
       <goods-list :goods="pushGoods" />
     </scroll>
+
+    <back-top @click.native="backClick"/>
   </div>
 </template>
 
 <script>
-import NavBar from "components/common/navbar/NavBar.vue";
+
 import HomeSwiper from "./childComps/HomeSwiper";
 import HomeRecommend from "./childComps/HomeRecommend";
 import FutureView from "./childComps/FutureView";
 import GoodsList from "content/goods/GoodsList";
 
+import NavBar from "components/common/navbar/NavBar.vue";
 import TabControl from "content/tabControl/TabControl";
 import Scroll from "common/scroll/Scroll";
+import BackTop from "content/backtop/BackTop"
 
 import { getHomeMultidata, getHomeData } from "network/home";
 
@@ -34,7 +38,8 @@ export default {
     FutureView,
     TabControl,
     GoodsList,
-    Scroll
+    Scroll,
+    BackTop
   },
   created() {
     this.getHomeMultidata();
@@ -70,6 +75,9 @@ export default {
           this.currentTab = "sell";
           break;
       }
+    },
+    backClick(){
+      this.$refs.scroll.scrollTo(0,0,1000)
     },
 
     /**
@@ -116,11 +124,13 @@ export default {
 }
 
 .scroll {
-  height: 100vh;
+  /* height: 100vh;
   position: absolute;
   top: 49;
   bottom: 49;
   left: 0;
-  right: 0;
+  right: 0; */
+  height: calc(100% - 98px);
+  overflow: hidden;
 }
 </style>

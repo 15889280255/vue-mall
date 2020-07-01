@@ -8,7 +8,7 @@
 export default {};
 </script>
 
-<style>
+<style scoped>
 #tab-bar {
   /* 本身的样式 */
   background-color: #f6f6f6;
