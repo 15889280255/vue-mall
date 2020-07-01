@@ -1,13 +1,15 @@
 <template>
-  <div>
+  <div id="home">
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banner" />
-    <home-recommend :recommends="recommend" />
-    <future-view />
-    <tab-control :titles="['流行','精选','新款']" class="tab-control" @tabIndedx="tabIndedx" />
-    <goods-list :goods="pushGoods" />
+    <scroll class="scroll">
+      <home-swiper :banners="banner" />
+      <home-recommend :recommends="recommend" />
+      <future-view />
+      <tab-control :titles="['流行','精选','新款']" class="tab-control" @tabIndedx="tabIndedx" />
+      <goods-list :goods="pushGoods" />
+    </scroll>
   </div>
 </template>
 
@@ -19,6 +21,7 @@ import FutureView from "./childComps/FutureView";
 import GoodsList from "content/goods/GoodsList";
 
 import TabControl from "content/tabControl/TabControl";
+import Scroll from "common/scroll/Scroll";
 
 import { getHomeMultidata, getHomeData } from "network/home";
 
@@ -30,7 +33,8 @@ export default {
     HomeRecommend,
     FutureView,
     TabControl,
-    GoodsList
+    GoodsList,
+    Scroll
   },
   created() {
     this.getHomeMultidata();
@@ -93,7 +97,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#home {
+  height: 100vh;
+}
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
@@ -104,7 +111,16 @@ export default {
 
 .tab-control {
   position: sticky;
-  top: 49px;
+  top: 48px;
   z-index: 10;
+}
+
+.scroll {
+  height: 100vh;
+  position: absolute;
+  top: 49;
+  bottom: 49;
+  left: 0;
+  right: 0;
 }
 </style>
