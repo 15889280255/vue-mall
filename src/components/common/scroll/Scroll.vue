@@ -7,40 +7,57 @@
 </template>
 
 <script>
-
-import BScroll from 'better-scroll'
+import BScroll from "better-scroll";
 
 export default {
-  data(){
+  data() {
     return {
-      scroll:null
+      scroll: {}
+    };
+  },
+  props: {
+    probeType: {
+      type: Number,
+      default: 0
+    },
+    pullUpLoad: {
+      type: Boolean,
+      default: false
     }
   },
-  props:{
-    probeType:{
-      type:Number,
-      default:0
-    }
+  mounted() {
+    this.initBscroll();
   },
-  mounted(){
-    // 1.创建BScroll对象
-    this.scroll = new BScroll(this.$refs.wrapper,{
-      click:true,
-      probeType:this.probeType
-    }),
-    // 2.添加监听
-    this.scroll.on('scroll',(position)=>{
-      this.$emit('getPosition',position)
-    })
-  },
-  methods:{
-    scrollTo(x,y,time = 1000){
-      this.scroll.scrollTo(x,y,time)
+  methods: {
+    initBscroll() {
+      if (!this.$refs.wrapper) return;
+      this.scroll = new BScroll(this.$refs.wrapper, {
+        click: true,
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad
+      });
+
+      // 2.添加监听
+      this.scroll.on("scroll", position => {
+        this.$emit("getPosition", position);
+      }),
+        // 3.监听上拉到底部
+        this.scroll.on("pullingUp", () => {
+          console.log("上拉加载");
+          this.$emit("pullingUp");
+        });
+    },
+
+    scrollTo(x, y, time = 1000) {
+      this.scroll.scrollTo(x, y, time);
+    },
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp();
+      this.scroll.refresh();
     }
   }
-}
+};
 </script>
 
 <style scoped>
-
 </style>

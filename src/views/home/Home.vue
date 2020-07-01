@@ -3,7 +3,14 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="scroll" ref="scroll" :probeType="3" @getPosition="getPosition">
+    <scroll
+      class="scroll"
+      ref="scroll"
+      :probeType="3"
+      :pull-up-load="true"
+      @getPosition="getPosition"
+      @pullingUp="loadMore"
+    >
       <home-swiper :banners="banner" />
       <home-recommend :recommends="recommend" />
       <future-view />
@@ -11,7 +18,7 @@
       <goods-list :goods="pushGoods" />
     </scroll>
 
-    <back-top @click.native="backClick" v-show="showBackTop"/>
+    <back-top @click.native="backClick" v-show="showBackTop" />
   </div>
 </template>
 
@@ -51,9 +58,9 @@ export default {
       banner: [],
       recommend: [],
       goods: {
-        pop: { page: 0, list: [] },
-        new: { page: 0, list: [] },
-        sell: { page: 0, list: [] }
+        'pop': { page: 1, list: [] },
+        'new': { page: 1, list: [] },
+        'sell': { page: 1, list: [] }
       },
       currentTab: "pop",
       showBackTop: false
@@ -80,8 +87,10 @@ export default {
       this.$refs.scroll.scrollTo(0, 0, 1000);
     },
     getPosition(position) {
-      console.log(position.y);
-      this.showBackTop = position.y<-700
+      this.showBackTop = position.y < -700;
+    },
+    loadMore() {
+      this.getHomeData(this.currentTab);
     },
 
     /**
@@ -94,10 +103,12 @@ export default {
       });
     },
     getHomeData(type) {
-      const page = this.goods[type].page + 1;
-      getHomeData(type, page).then(val => {
-        this.goods[type].list.push(...val.data.list);
+      getHomeData(type, this.goods[type].page).then(val => {
+        const newList = val.data.list;
+        this.goods[type].list.push(...newList);
         this.goods[type].page += 1;
+        
+        this.$refs.scroll.finishPullUp();
       });
     }
   },
