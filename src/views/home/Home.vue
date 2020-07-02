@@ -57,7 +57,8 @@ export default {
       currentTab: "pop",
       showBackTop: false,
       offsetTop: 0,
-      isTabFixed: false
+      isTabFixed: false,
+      scrollY: 0
     };
   },
   components: {
@@ -82,6 +83,13 @@ export default {
     this.$bus.$on("itemImageLoad", () => {
       refresh();
     });
+  },
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.scrollY, 0);
+    this.$refs.scroll.refresh();
+  },
+  deactivated() {
+    this.scrollY = this.$refs.scroll.getScrollY();
   },
   methods: {
     /**
@@ -114,7 +122,6 @@ export default {
     },
     SwiperImageLoad() {
       this.offsetTop = this.$refs.tabControl2.$el.offsetTop;
-      console.log(this.offsetTop);
     },
 
     /**

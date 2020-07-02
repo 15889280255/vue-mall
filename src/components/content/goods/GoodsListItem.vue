@@ -1,11 +1,9 @@
 <template>
-  <div class="goods-list-item">
-    <a :href="item.link">
-      <img :src="item.show.img" alt class="item-img" @load="imageLoad"/>
-      <p class="item-title">{{item.title}}</p>
-      <span class="item-price">{{item.price}}￥</span>
-      <span class="item-cfav">- {{item.cfav}}人收藏</span>
-    </a>
+  <div class="goods-list-item" @click="goTODetail">
+    <img :src="item.show.img" alt class="item-img" @load="imageLoad" />
+    <p class="item-title">{{item.title}}</p>
+    <span class="item-price">{{item.price}}￥</span>
+    <span class="item-cfav">- {{item.cfav}}人收藏</span>
   </div>
 </template>
 
@@ -19,9 +17,12 @@ export default {
       }
     }
   },
-  methods:{
-    imageLoad(){
-      this.$bus.$emit('itemImageLoad');
+  methods: {
+    imageLoad() {
+      this.$bus.$emit("itemImageLoad");
+    },
+    goTODetail(){
+      this.$router.push('/detail/' + this.item.iid)
     }
   }
 };
