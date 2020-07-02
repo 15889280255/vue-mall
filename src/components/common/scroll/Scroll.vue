@@ -37,13 +37,15 @@ export default {
         pullUpLoad: this.pullUpLoad
       });
       // 2.添加监听
-      this.scroll.on("scroll", position => {
-        this.$emit("getPosition", position);
-      }),
-        // 3.监听上拉到底部
-        this.scroll.on("pullingUp", () => {
-          this.$emit("pullingUp");
+      if (this.probeType == 2 || this.probeType == 3) {
+        this.scroll.on("scroll", position => {
+          this.$emit("getPosition", position);
         });
+      }
+      // 3.监听上拉到底部
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp");
+      });
     },
 
     scrollTo(x, y, time = 1000) {
@@ -54,8 +56,6 @@ export default {
       this.refresh;
     },
     refresh() {
-      console.log('===============');
-      
       this.scroll && this.scroll.refresh && this.scroll.refresh();
     }
   }

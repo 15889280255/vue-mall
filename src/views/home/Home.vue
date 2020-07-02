@@ -3,6 +3,13 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control
+      :titles="['流行','精选','新款']"
+      class="fixed"
+      @tabIndedx="tabIndedx"
+      ref="tabControl1"
+      v-show="isTabFixed"
+    />
     <scroll
       class="scroll"
       ref="scroll"
@@ -11,10 +18,10 @@
       @getPosition="getPosition"
       @pullingUp="loadMore"
     >
-      <home-swiper :banners="banner" />
+      <home-swiper :banners="banner" @SwiperImageLoad="SwiperImageLoad" />
       <home-recommend :recommends="recommend" />
       <future-view />
-      <tab-control :titles="['流行','精选','新款']" class="tab-control" @tabIndedx="tabIndedx" />
+      <tab-control :titles="['流行','精选','新款']" @tabIndedx="tabIndedx" ref="tabControl2" />
       <goods-list :goods="pushGoods" />
     </scroll>
 
@@ -34,6 +41,7 @@ import Scroll from "common/scroll/Scroll";
 import BackTop from "content/backtop/BackTop";
 
 import { getHomeMultidata, getHomeData } from "network/home";
+import { debounce } from "@/common/util";
 
 export default {
   name: "home",
@@ -47,7 +55,9 @@ export default {
         sell: { page: 1, list: [] }
       },
       currentTab: "pop",
-      showBackTop: false
+      showBackTop: false,
+      offsetTop: 0,
+      isTabFixed: false
     };
   },
   components: {
@@ -68,25 +78,15 @@ export default {
   },
   mounted() {
     // 监听item图片加载完成(多次调用，需使用防抖函数)
-    const debounce = this.debounce(this.$refs.scroll.refresh, 200);
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
     this.$bus.$on("itemImageLoad", () => {
-      debounce();
+      refresh();
     });
   },
   methods: {
     /**
      * 事件处理
      */
-    // 防抖函数
-    debounce(func, delay) {
-      let timer = null;
-      return function(...args) {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          func.apply(this, args)
-        }, delay);
-      };
-    },
     tabIndedx(index) {
       switch (index) {
         case 0:
@@ -99,15 +99,22 @@ export default {
           this.currentTab = "sell";
           break;
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0, 1000);
     },
     getPosition(position) {
       this.showBackTop = position.y < -700;
+      this.isTabFixed = position.y < -this.offsetTop + 49;
     },
     loadMore() {
       this.getHomeData(this.currentTab);
+    },
+    SwiperImageLoad() {
+      this.offsetTop = this.$refs.tabControl2.$el.offsetTop;
+      console.log(this.offsetTop);
     },
 
     /**
@@ -143,26 +150,20 @@ export default {
 }
 .home-nav {
   background-color: var(--color-tint);
+  font-weight: 700;
   color: #fff;
-  position: sticky;
-  top: 0px;
-  z-index: 100;
-}
-
-.tab-control {
-  position: sticky;
-  top: 48px;
-  z-index: 10;
 }
 
 .scroll {
-  /* height: 100vh;
-  position: absolute;
-  top: 49;
-  bottom: 49;
-  left: 0;
-  right: 0; */
   height: calc(100% - 98px);
   overflow: hidden;
+}
+
+.fixed {
+  position: fixed;
+  top: 49px;
+  left: 0;
+  right: 0;
+  z-index: 10;
 }
 </style>
