@@ -37,6 +37,19 @@ import { getHomeMultidata, getHomeData } from "network/home";
 
 export default {
   name: "home",
+  data() {
+    return {
+      banner: [],
+      recommend: [],
+      goods: {
+        pop: { page: 1, list: [] },
+        new: { page: 1, list: [] },
+        sell: { page: 1, list: [] }
+      },
+      currentTab: "pop",
+      showBackTop: false
+    };
+  },
   components: {
     NavBar,
     HomeSwiper,
@@ -53,23 +66,27 @@ export default {
     this.getHomeData("new", 0);
     this.getHomeData("sell", 0);
   },
-  data() {
-    return {
-      banner: [],
-      recommend: [],
-      goods: {
-        'pop': { page: 1, list: [] },
-        'new': { page: 1, list: [] },
-        'sell': { page: 1, list: [] }
-      },
-      currentTab: "pop",
-      showBackTop: false
-    };
+  mounted() {
+    // 监听item图片加载完成(多次调用，需使用防抖函数)
+    const debounce = this.debounce(this.$refs.scroll.refresh, 200);
+    this.$bus.$on("itemImageLoad", () => {
+      debounce();
+    });
   },
   methods: {
     /**
      * 事件处理
      */
+    // 防抖函数
+    debounce(func, delay) {
+      let timer = null;
+      return function(...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          func.apply(this, args)
+        }, delay);
+      };
+    },
     tabIndedx(index) {
       switch (index) {
         case 0:
@@ -107,7 +124,7 @@ export default {
         const newList = val.data.list;
         this.goods[type].list.push(...newList);
         this.goods[type].page += 1;
-        
+
         this.$refs.scroll.finishPullUp();
       });
     }

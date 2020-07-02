@@ -36,28 +36,30 @@ export default {
         probeType: this.probeType,
         pullUpLoad: this.pullUpLoad
       });
-
       // 2.添加监听
       this.scroll.on("scroll", position => {
         this.$emit("getPosition", position);
       }),
         // 3.监听上拉到底部
         this.scroll.on("pullingUp", () => {
-          console.log("上拉加载");
           this.$emit("pullingUp");
         });
     },
 
     scrollTo(x, y, time = 1000) {
-      this.scroll.scrollTo(x, y, time);
+      this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time);
     },
     finishPullUp() {
       this.scroll && this.scroll.finishPullUp && this.scroll.finishPullUp();
-      this.scroll.refresh();
+      this.refresh;
+    },
+    refresh() {
+      console.log('===============');
+      
+      this.scroll && this.scroll.refresh && this.scroll.refresh();
     }
   }
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
