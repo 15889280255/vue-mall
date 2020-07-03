@@ -12,7 +12,7 @@
       <span>{{goods.services[goods.services.length-1].name}}</span>
     </div>
     <div class="info-service">
-      <span v-for="index in goods.services.length-2" :key="index">
+      <span v-for="index in goods.services.length-1" :key="index">
         <img :src="goods.services[index].icon" alt class="service-icon" />
         <span>{{goods.services[index].name}}</span>
       </span>
@@ -80,13 +80,13 @@ export default {
   padding: 15px 16px;
   font-size: 12px;
   line-height: 20px;
-  align-items: center;
-  border-bottom: 3px solid #8080801e;
+  border-bottom: 5px solid #8080801e;
 }
 .service-icon {
   width: 15px;
   height: 15px;
-  align-items: center;
-  align-self: center;
+  position: relative;
+  top: 3px;
+  right: 3px;
 }
 </style>
