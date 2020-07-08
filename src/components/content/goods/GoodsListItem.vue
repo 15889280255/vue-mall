@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list-item" @click="goTODetail">
-    <img :src="item.show.img" alt class="item-img" @load="imageLoad" />
+    <img :src="getImgUrl" alt class="item-img" @load="imageLoad" />
     <p class="item-title">{{item.title}}</p>
     <span class="item-price">{{item.price}}￥</span>
     <span class="item-cfav">- {{item.cfav}}人收藏</span>
@@ -21,8 +21,13 @@ export default {
     imageLoad() {
       this.$bus.$emit("itemImageLoad");
     },
-    goTODetail(){
-      this.$router.push('/detail/' + this.item.iid)
+    goTODetail() {
+      this.$router.push("/detail/" + this.item.iid);
+    }
+  },
+  computed: {
+    getImgUrl: function() {
+      return this.item.image || this.item.show.img;
     }
   }
 };

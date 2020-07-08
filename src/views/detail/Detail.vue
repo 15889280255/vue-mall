@@ -8,6 +8,7 @@
       <detail-goods-info :detail-info="detailInfo" @img-load="imgLoad"></detail-goods-info>
       <detail-goods-param :param-info="goodsParam"></detail-goods-param>
       <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
+      <goods-list :goods="recommendList"></goods-list>
     </scroll>
   </div>
 </template>
@@ -17,13 +18,14 @@ import DetailNavBar from "./childComps/DetailNavBar";
 import DetailSwiper from "./childComps/DetailSwiper";
 import DetailBaseInfo from "./childComps/DetailBaseInfo";
 import DetailShopInfo from "./childComps/DetailShopInfo";
-import DetailGoodsInfo from './childComps/DetailGoodsInfo'
-import DetailGoodsParam from './childComps/DetailGoodsParam'
-import DetailCommentInfo from './childComps/DetailCommentInfo'
+import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
+import DetailGoodsParam from "./childComps/DetailGoodsParam";
+import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import Scroll from "common/scroll/Scroll";
+import GoodsList from "content/goods/GoodsList";
 
-import { getDetail } from "network/detail";
-import { Goods, Shop ,GoodsParam} from "network/detail";
+import { getDetail, getRecommend } from "network/detail";
+import { Goods, Shop, GoodsParam } from "network/detail";
 export default {
   name: "Detail",
   data() {
@@ -32,9 +34,10 @@ export default {
       topImages: [],
       goods: {},
       shop: {},
-      detailInfo:{},
-      goodsParam:{},
-      commentInfo:{}
+      detailInfo: {},
+      goodsParam: {},
+      commentInfo: {},
+      recommendList: []
     };
   },
   components: {
@@ -45,18 +48,18 @@ export default {
     Scroll,
     DetailGoodsInfo,
     DetailGoodsParam,
-    DetailCommentInfo
+    DetailCommentInfo,
+    GoodsList
   },
   created() {
-    this.getDetail();
+    this._getDetail();
+    this._getRecommend();
   },
   methods: {
-    getDetail() {
+    _getDetail() {
       this.iid = this.$route.params.iid;
       getDetail(this.iid).then(res => {
         const data = res.result;
-        console.log(data);
-
         this.topImages = data.itemInfo.topImages;
         this.goods = new Goods(
           data.itemInfo,
@@ -65,14 +68,22 @@ export default {
         );
         this.shop = new Shop(data.shopInfo);
         this.detailInfo = data.detailInfo;
-        this.goodsParam = new GoodsParam(data.itemParams.info, data.itemParams.rule);
-        if(data.rate.cRate != 0){
-          this.commentInfo = data.rate.list[0]
+        this.goodsParam = new GoodsParam(
+          data.itemParams.info,
+          data.itemParams.rule
+        );
+        if (data.rate.cRate != 0) {
+          this.commentInfo = data.rate.list[0];
         }
       });
     },
-    imgLoad(){
-      this.$refs.scroll.refresh
+    _getRecommend() {
+      getRecommend().then(val => {
+        this.recommendList = val.data.list;
+      });
+    },
+    imgLoad() {
+      this.$refs.scroll.refresh;
     }
   }
 };
@@ -86,7 +97,7 @@ export default {
   height: 100vh;
 }
 
-.content{
+.content {
   height: calc(100% - 49px);
   overflow: hidden;
 }
