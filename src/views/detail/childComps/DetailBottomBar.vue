@@ -28,7 +28,7 @@ export default {};
 <style>
 .bottom-bar {
   width: 100%;
-  height: 60px;
+  height: 58px;
   background-color: #fff;
   position: fixed;
   bottom: 0px;

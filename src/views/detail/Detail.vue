@@ -10,7 +10,8 @@
       <detail-comment-info ref="common" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommendList"></goods-list>
     </scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar />
+    <back-top @backTop="backTop" class="back-top" v-show="showBackTop" />
   </div>
 </template>
 
@@ -22,16 +23,20 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailGoodsParam from "./childComps/DetailGoodsParam";
 import DetailCommentInfo from "./childComps/DetailCommentInfo";
-import DetailBottomBar from './childComps/DetailBottomBar'
+import DetailBottomBar from "./childComps/DetailBottomBar";
 import Scroll from "common/scroll/Scroll";
 import GoodsList from "content/goods/GoodsList";
+import BackTop from "content/backtop/BackTop";
 
 import { debounce } from "@/common/util";
+import { backTopMixin } from "@/common/mixin";
+import { BACKTOP_DISTANCE } from "@/common/const";
 
 import { getDetail, getRecommend } from "network/detail";
 import { Goods, Shop, GoodsParam } from "network/detail";
 export default {
   name: "Detail",
+  mixins: [backTopMixin],
   data() {
     return {
       iid: null,
@@ -57,7 +62,8 @@ export default {
     DetailGoodsParam,
     DetailCommentInfo,
     GoodsList,
-    DetailBottomBar
+    DetailBottomBar,
+    BackTop
   },
   created() {
     this._getDetail();
@@ -117,12 +123,15 @@ export default {
       const positionY = -position.y + 49;
       let length = this.topY.length;
 
-      for (let i = 0; i < length-1; i++) {
+      //控制回到顶部按钮
+      this.showBackTop = position.y < -BACKTOP_DISTANCE;
+
+      for (let i = 0; i < length - 1; i++) {
         if (
           this.currentIndex !== i &&
           i < length - 1 &&
-            positionY >= this.topY[i] &&
-            positionY < this.topY[i + 1]
+          positionY >= this.topY[i] &&
+          positionY < this.topY[i + 1]
         ) {
           this.currentIndex = i;
           this.$refs.navbar.currentIndex = this.currentIndex;

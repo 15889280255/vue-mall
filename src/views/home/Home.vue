@@ -24,8 +24,7 @@
       <tab-control :titles="['流行','精选','新款']" @tabIndedx="tabIndedx" ref="tabControl2" />
       <goods-list :goods="pushGoods" />
     </scroll>
-
-    <back-top @click.native="backClick" v-show="showBackTop" />
+    <back-top @backTop="backTop" class="back-top" v-show="showBackTop" />
   </div>
 </template>
 
@@ -42,9 +41,12 @@ import BackTop from "content/backtop/BackTop";
 
 import { getHomeMultidata, getHomeData } from "network/home";
 import { debounce } from "@/common/util";
+import { backTopMixin } from "@/common/mixin";
+import { BACKTOP_DISTANCE } from "@/common/const";
 
 export default {
   name: "home",
+  mixins: [backTopMixin],
   data() {
     return {
       banner: [],
@@ -55,7 +57,6 @@ export default {
         sell: { page: 1, list: [] }
       },
       currentTab: "pop",
-      showBackTop: false,
       offsetTop: 0,
       isTabFixed: false,
       scrollY: 0
@@ -85,8 +86,7 @@ export default {
     });
   },
   activated() {
-    console.log('y==='+this.scrollY);
-    this.$refs.scroll.scrollTo(0, this.scrollY,0);
+    this.$refs.scroll.scrollTo(0, this.scrollY, 0);
     this.$refs.scroll.refresh();
   },
   deactivated() {
@@ -111,12 +111,12 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    backClick() {
-      this.$refs.scroll.scrollTo(0, 0, 1000);
-    },
     getPosition(position) {
       this.showBackTop = position.y < -700;
       this.isTabFixed = position.y < -this.offsetTop + 49;
+      
+      //控制回到顶部按钮
+      this.showBackTop = position.y < -BACKTOP_DISTANCE;
     },
     loadMore() {
       this.getHomeData(this.currentTab);
