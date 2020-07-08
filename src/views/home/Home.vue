@@ -80,7 +80,7 @@ export default {
   mounted() {
     // 监听item图片加载完成(多次调用，需使用防抖函数)
     const refresh = debounce(this.$refs.scroll.refresh, 200);
-    this.$bus.$on("itemImageLoad", () => {
+    this.$bus.$on("homeItemImageLoad", () => {
       refresh();
     });
   },

@@ -1,14 +1,14 @@
 <template>
   <div class="detail">
-    <detail-nav-bar></detail-nav-bar>
+    <detail-nav-bar @titleClick="titleClick"></detail-nav-bar>
     <scroll class="content" ref="scroll">
       <detail-swiper :imgList="topImages"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
-      <detail-goods-info :detail-info="detailInfo" @img-load="imgLoad"></detail-goods-info>
-      <detail-goods-param :param-info="goodsParam"></detail-goods-param>
-      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
-      <goods-list :goods="recommendList"></goods-list>
+      <detail-goods-info :detail-info="detailInfo" @detailImgLoad="imgLoad"></detail-goods-info>
+      <detail-goods-param ref="param" :param-info="goodsParam"></detail-goods-param>
+      <detail-comment-info ref="common" :comment-info="commentInfo"></detail-comment-info>
+      <goods-list ref="recommend" :goods="recommendList"></goods-list>
     </scroll>
   </div>
 </template>
@@ -24,6 +24,8 @@ import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import Scroll from "common/scroll/Scroll";
 import GoodsList from "content/goods/GoodsList";
 
+import { debounce } from "@/common/util";
+
 import { getDetail, getRecommend } from "network/detail";
 import { Goods, Shop, GoodsParam } from "network/detail";
 export default {
@@ -37,7 +39,9 @@ export default {
       detailInfo: {},
       goodsParam: {},
       commentInfo: {},
-      recommendList: []
+      recommendList: [],
+      topY:[],
+      getTopY:null
     };
   },
   components: {
@@ -54,6 +58,21 @@ export default {
   created() {
     this._getDetail();
     this._getRecommend();
+    this.getTopY = debounce(()=>{
+      this.topY = []
+      this.topY.push(49)
+      this.topY.push(this.$refs.param.$el.offsetTop)
+      this.topY.push(this.$refs.common.$el.offsetTop)
+      this.topY.push(this.$refs.recommend.$el.offsetTop)
+      this.$refs.scroll.refresh()
+    },200)
+  },
+  mounted() {
+    // 监听item图片加载完成(多次调用，需使用防抖函数)
+    const refresh = debounce(this.$refs.scroll.refresh, 200);
+    this.$bus.$on("detailItemImageLoad", () => {
+      refresh();
+    });
   },
   methods: {
     _getDetail() {
@@ -83,7 +102,11 @@ export default {
       });
     },
     imgLoad() {
-      this.$refs.scroll.refresh;
+      this.getTopY()
+    },
+    titleClick(index){
+      console.log(index);
+      this.$refs.scroll.scrollTo(0,-this.topY[index]+49,200)
     }
   }
 };

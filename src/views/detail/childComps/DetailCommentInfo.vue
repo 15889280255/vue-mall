@@ -20,7 +20,7 @@
         <span>{{commentInfo.style}}</span>
       </div>
       <div class="info-imgs">
-        <img :src="item" v-for="(item, index) in commentInfo.images" :key="index"/>
+        <img :src="item" v-for="(item, index) in commentInfo.images" :key="index" />
       </div>
     </div>
   </div>
@@ -47,6 +47,10 @@ export default {
 </script>
 
 <style scoped>
+.comment-info {
+  margin-bottom: 16px;
+  border-bottom: 5px solid #eeebeb;
+}
 .comment-header {
   display: flex;
   justify-content: space-between;
@@ -81,13 +85,13 @@ export default {
 .info-other .date {
   margin-right: 8px;
 }
-  .info-imgs {
-    margin-top: 10px;
-  }
+.info-imgs {
+  margin-top: 10px;
+}
 
-  .info-imgs img {
-    width: 70px;
-    height: 70px;
-    margin-right: 5px;
-  }
+.info-imgs img {
+  width: 70px;
+  height: 70px;
+  margin-right: 5px;
+}
 </style>

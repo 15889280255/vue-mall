@@ -33,8 +33,7 @@ export default {
   },
   methods: {
     imgLoad() {
-      this.$emit("imgLoad");
-      // debounce(this.refresh(), 500);
+      this.$emit("detailImgLoad");
     },
     refresh() {
       
