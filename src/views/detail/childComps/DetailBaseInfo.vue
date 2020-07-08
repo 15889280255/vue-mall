@@ -32,9 +32,6 @@ export default {
       discountBgColor: this.goods.discountBgColor
     };
   },
-  mounted() {
-    console.log(this.goods.itemInfo);
-  }
 };
 </script>
 

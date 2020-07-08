@@ -85,7 +85,8 @@ export default {
     });
   },
   activated() {
-    this.$refs.scroll.scrollTo(0, this.scrollY, 0);
+    console.log('y==='+this.scrollY);
+    this.$refs.scroll.scrollTo(0, this.scrollY,0);
     this.$refs.scroll.refresh();
   },
   deactivated() {

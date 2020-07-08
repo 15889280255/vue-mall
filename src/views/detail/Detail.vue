@@ -1,10 +1,13 @@
 <template>
   <div class="detail">
     <detail-nav-bar></detail-nav-bar>
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <detail-swiper :imgList="topImages"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
+      <detail-goods-info :detail-info="detailInfo" @img-load="imgLoad"></detail-goods-info>
+      <detail-goods-param :param-info="goodsParam"></detail-goods-param>
+      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
     </scroll>
   </div>
 </template>
@@ -14,10 +17,13 @@ import DetailNavBar from "./childComps/DetailNavBar";
 import DetailSwiper from "./childComps/DetailSwiper";
 import DetailBaseInfo from "./childComps/DetailBaseInfo";
 import DetailShopInfo from "./childComps/DetailShopInfo";
+import DetailGoodsInfo from './childComps/DetailGoodsInfo'
+import DetailGoodsParam from './childComps/DetailGoodsParam'
+import DetailCommentInfo from './childComps/DetailCommentInfo'
 import Scroll from "common/scroll/Scroll";
 
 import { getDetail } from "network/detail";
-import { Goods, Shop } from "network/detail";
+import { Goods, Shop ,GoodsParam} from "network/detail";
 export default {
   name: "Detail",
   data() {
@@ -25,7 +31,10 @@ export default {
       iid: null,
       topImages: [],
       goods: {},
-      shop: {}
+      shop: {},
+      detailInfo:{},
+      goodsParam:{},
+      commentInfo:{}
     };
   },
   components: {
@@ -33,7 +42,10 @@ export default {
     DetailSwiper,
     DetailBaseInfo,
     DetailShopInfo,
-    Scroll
+    Scroll,
+    DetailGoodsInfo,
+    DetailGoodsParam,
+    DetailCommentInfo
   },
   created() {
     this.getDetail();
@@ -52,7 +64,15 @@ export default {
           data.shopInfo.services
         );
         this.shop = new Shop(data.shopInfo);
+        this.detailInfo = data.detailInfo;
+        this.goodsParam = new GoodsParam(data.itemParams.info, data.itemParams.rule);
+        if(data.rate.cRate != 0){
+          this.commentInfo = data.rate.list[0]
+        }
       });
+    },
+    imgLoad(){
+      this.$refs.scroll.refresh
     }
   }
 };
