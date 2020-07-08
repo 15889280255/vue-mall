@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
-    <detail-nav-bar @titleClick="titleClick"></detail-nav-bar>
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar @titleClick="titleClick" ref="navbar"></detail-nav-bar>
+    <scroll class="content" ref="scroll" @getPosition="getPosition" :probe-type="3">
       <detail-swiper :imgList="topImages"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
@@ -40,8 +40,9 @@ export default {
       goodsParam: {},
       commentInfo: {},
       recommendList: [],
-      topY:[],
-      getTopY:null
+      topY: [],
+      getTopY: null,
+      currentIndex: 0
     };
   },
   components: {
@@ -58,14 +59,15 @@ export default {
   created() {
     this._getDetail();
     this._getRecommend();
-    this.getTopY = debounce(()=>{
-      this.topY = []
-      this.topY.push(49)
-      this.topY.push(this.$refs.param.$el.offsetTop)
-      this.topY.push(this.$refs.common.$el.offsetTop)
-      this.topY.push(this.$refs.recommend.$el.offsetTop)
-      this.$refs.scroll.refresh()
-    },200)
+    this.getTopY = debounce(() => {
+      this.topY = [];
+      this.topY.push(49);
+      this.topY.push(this.$refs.param.$el.offsetTop);
+      this.topY.push(this.$refs.common.$el.offsetTop);
+      this.topY.push(this.$refs.recommend.$el.offsetTop);
+      this.topY.push(Number.MAX_VALUE);
+      this.$refs.scroll.refresh();
+    }, 200);
   },
   mounted() {
     // 监听item图片加载完成(多次调用，需使用防抖函数)
@@ -102,11 +104,27 @@ export default {
       });
     },
     imgLoad() {
-      this.getTopY()
+      this.getTopY();
     },
-    titleClick(index){
-      console.log(index);
-      this.$refs.scroll.scrollTo(0,-this.topY[index]+49,200)
+    titleClick(index) {
+      // console.log(index);
+      this.$refs.scroll.scrollTo(0, -this.topY[index] + 49, 200);
+    },
+    getPosition(position) {
+      const positionY = -position.y + 49;
+      let length = this.topY.length;
+
+      for (let i = 0; i < length-1; i++) {
+        if (
+          this.currentIndex !== i &&
+          i < length - 1 &&
+            positionY >= this.topY[i] &&
+            positionY < this.topY[i + 1]
+        ) {
+          this.currentIndex = i;
+          this.$refs.navbar.currentIndex = this.currentIndex;
+        }
+      }
     }
   }
 };
