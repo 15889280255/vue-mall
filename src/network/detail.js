@@ -1,22 +1,22 @@
-import {request} from './request'
+import { request } from './request'
 
-export function getDetail(iid){
+export function getDetail(iid) {
   return request({
-    url:'/detail',
-    params:{
-      iid:iid
+    url: '/detail',
+    params: {
+      iid: iid
     }
   })
 }
 
-export function getRecommend(){
+export function getRecommend() {
   return request({
-    url:"/recommend"
+    url: "/recommend"
   })
 }
 
-export class Goods{
-  constructor(itemInfo,columns,services){
+export class Goods {
+  constructor(itemInfo, columns, services) {
     this.title = itemInfo.title;
     this.desc = itemInfo.desc;
     this.newPrice = itemInfo.price;
@@ -24,13 +24,14 @@ export class Goods{
     this.nowPrice = itemInfo.highNowPrice;
     this.disCount = itemInfo.discountDesc;
     this.discountBgColor = itemInfo.discountBgColor;
+    this.realPrice = itemInfo.lowNowPrice;
     this.columns = columns;
     this.services = services;
   }
 }
 
-export class Shop{
-  constructor(shopInfo){
+export class Shop {
+  constructor(shopInfo) {
     this.logo = shopInfo.shopLogo;
     this.name = shopInfo.name;
     this.fans = shopInfo.cFans;
