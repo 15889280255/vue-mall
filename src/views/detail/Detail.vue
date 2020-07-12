@@ -10,7 +10,7 @@
       <detail-comment-info ref="common" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommendList"></goods-list>
     </scroll>
-    <detail-bottom-bar @addCart="addCart"/>
+    <detail-bottom-bar @addCart="addCart" />
     <back-top @backTop="backTop" class="back-top" v-show="showBackTop" />
   </div>
 </template>
@@ -137,16 +137,18 @@ export default {
         }
       }
     },
-    addCart(){
-      const product ={}
-      product.image = this.topImages[0]
-      product.title = this.goods.title
-      product.desc = this.goods.desc
-      product.price = this.goods.realPrice
-      product.iid = this.iid
+    addCart() {
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
 
       // 添加到购物车 vuex
-      this.$store.dispatch('addCart',product)
+      this.$store
+        .dispatch("addCart", product)
+        .then(val => console.log(val))
     }
   }
 };
