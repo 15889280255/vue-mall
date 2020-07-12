@@ -1,7 +1,7 @@
 <template>
   <div class="bottom-bar">
     <div class="check-area">
-      <check-button :value="allChecked" />
+      <check-button :value="allChecked" @click.native="allCheckedClick" />
       <span>全选</span>
     </div>
 
@@ -14,6 +14,11 @@
 <script>
 import CheckButton from "./CheckButton";
 export default {
+  data() {
+    return {
+      isAllCheck: false
+    };
+  },
   components: {
     CheckButton
   },
@@ -38,6 +43,11 @@ export default {
       return this.$store.getters.cartList.every(item => {
         return item.checked === true;
       });
+    }
+  },
+  methods: {
+    allCheckedClick() {
+      this.$store.commit("allChecked", !this.allChecked);
     }
   }
 };
