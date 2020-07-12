@@ -1,17 +1,13 @@
 <template>
   <div class="bottom-bar">
     <div class="check-area">
-      <check-button />
+      <check-button :value="allChecked" />
       <span>全选</span>
     </div>
 
-    <div class="total-price">
-      合计：{{totalPrice}}
-    </div>
+    <div class="total-price">合计：{{totalPrice}}</div>
 
-    <div class="calculate">
-      去计算({{checkedLength}})
-    </div>
+    <div class="calculate">去计算({{checkedLength}})</div>
   </div>
 </template>
 
@@ -21,16 +17,27 @@ export default {
   components: {
     CheckButton
   },
-  computed:{
-    totalPrice(){
-      return '￥'+this.$store.getters.cartList.filter(item => {
-        return item.checked
-      }).reduce((pre,item) =>{
-        return item.price*item.count + pre
-      },0)
+  computed: {
+    totalPrice() {
+      return (
+        "￥" +
+        this.$store.getters.cartList
+          .filter(item => {
+            return item.checked;
+          })
+          .reduce((pre, item) => {
+            return item.price * item.count + pre;
+          }, 0)
+      );
     },
-    checkedLength(){
-      return this.$store.getters.cartList.filter(item =>item.checked).length
+    checkedLength() {
+      return this.$store.getters.cartList.filter(item => item.checked).length;
+    },
+    allChecked() {
+      if (this.$store.getters.cartList.length === 0) return false;
+      return this.$store.getters.cartList.every(item => {
+        return item.checked === true;
+      });
     }
   }
 };
@@ -44,24 +51,24 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.check-area{
+.check-area {
   display: flex;
   height: 49px;
   padding: 16px;
 }
-.check-area span{
+.check-area span {
   margin-left: 5px;
   font-size: 14px;
   text-align: center;
 }
-.total-price{
+.total-price {
   font-size: 15px;
   padding: 16px 0px;
   color: #000;
 }
-.calculate{
+.calculate {
   position: relative;
-    padding: 0px 16px;
+  padding: 0px 16px;
   background: red;
   text-align: center;
   color: #fff;

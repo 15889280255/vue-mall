@@ -52,8 +52,8 @@ export default {
   align-items: center;
 }
 .item-img img {
-  width: 100px;
-  height: 140px;
+  width: 80px;
+  height: 110px;
   border-radius: 15px;
   margin-left: 16px;
 }
@@ -89,12 +89,12 @@ export default {
 .left {
   padding: 10px;
   left: 0px;
-  font-size: 22px;
+  font-size: 20px;
   color: var(--color-tint);
 }
 .right {
   padding: 10px;
-  font-size: 20px;
+  font-size: 16px;
   right: 0px;
 }
 </style>

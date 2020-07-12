@@ -26,8 +26,8 @@ export default {
 .icon {
   position: relative;
   margin: 0px;
-  width: 20px;
-  height: 20px;
+  width: 23px;
+  height: 23px;
   border-radius: 50%;
   border: 2px solid #ccc;
   cursor: pointer;
