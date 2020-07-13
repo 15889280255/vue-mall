@@ -148,7 +148,7 @@ export default {
       // 添加到购物车 vuex
       this.$store
         .dispatch("addCart", product)
-        .then(val => console.log(val))
+        .then(val => this.$toast.show(val));
     }
   }
 };

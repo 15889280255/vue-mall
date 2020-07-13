@@ -7,7 +7,7 @@
 
     <div class="total-price">合计：{{totalPrice}}</div>
 
-    <div class="calculate">去计算({{checkedLength}})</div>
+    <div class="calculate" @click="calculateClick">去计算({{checkedLength}})</div>
   </div>
 </template>
 
@@ -48,6 +48,13 @@ export default {
   methods: {
     allCheckedClick() {
       this.$store.commit("allChecked", !this.allChecked);
+    },
+    calculateClick(){
+      if(!this.checkedLength){
+        this.$toast.show('请先选择商品')
+      }else{
+        this.$toast.show('需要支付：'+this.totalPrice)
+      }
     }
   }
 };
