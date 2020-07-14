@@ -23,6 +23,6 @@ export default {
 
 .back-top img {
   height: 43px;
-  widows: 43px;
+  width: 43px;
 }
 </style>
