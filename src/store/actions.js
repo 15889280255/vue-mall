@@ -8,7 +8,7 @@ export default {
       }else{
         payload.count = 1
         context.commit('addProduct',payload)
-        resolve('添加商品')
+        resolve('加入购物车')
       } 
     })
   }
