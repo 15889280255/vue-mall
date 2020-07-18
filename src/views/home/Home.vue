@@ -74,9 +74,9 @@ export default {
   },
   created() {
     this.getHomeMultidata();
-    this.getHomeData("pop", 0);
-    this.getHomeData("new", 0);
-    this.getHomeData("sell", 0);
+    this.getHomeData("pop");
+    this.getHomeData("new");
+    this.getHomeData("sell");
   },
   mounted() {
     // 监听item图片加载完成(多次调用，需使用防抖函数)
@@ -169,7 +169,7 @@ export default {
 
 .fixed {
   position: fixed;
-  top: 49px;
+  top: 48px;
   left: 0;
   right: 0;
   z-index: 10;

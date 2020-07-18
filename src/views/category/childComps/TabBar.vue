@@ -34,7 +34,10 @@ export default {
   methods: {
     itemClick(item) {
       this.choose = item;
-    }
+
+      let index = this.tabData.indexOf(item) + 1;
+      this.$emit('clickIndex',index)
+    },
   }
 };
 </script>
