@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav-bar>
-      <div slot="left" class="left">
+      <div slot="left" class="left" @click="menuClick">
         <img src="~assets/img/common/follow_note.png" alt />
       </div>
       <div slot="center" class="center">
@@ -36,6 +36,9 @@ export default {
     },
     blur() {
       console.log('失去焦点事件blur');
+    },
+    menuClick(){
+      this.$emit('menuClick')
     }
   }
 };
@@ -48,7 +51,7 @@ export default {
   height: 30px;
   padding-left: 5px;
   width: 80%;
-  border-color: white;
+  border-color: rgb(255, 214, 214);
   font-size: 13px;
   color: grey;
 }
@@ -64,6 +67,7 @@ export default {
 .right img {
   width: 22px;
   height: 22px;
-  padding-top: 5px;
+  line-height: 22px;
+  padding-top: 3px;
 }
 </style>
